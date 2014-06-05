@@ -30,7 +30,7 @@ class FormerServiceProvider extends ServiceProvider {
 	{
 		$this->app['former'] = $this->app->share(function($app)
 		{
-			$form = new Former($app['html'], $app['url'], $app['session.store']->getToken());
+			$form = new Former($app['html'], $app['url'], $app['session.store'], $app['config']);
 			return $form->setSessionStore($app['session.store']);
 		});
 	}

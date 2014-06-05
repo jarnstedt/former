@@ -1,12 +1,8 @@
 <?php namespace Jarnstedt\Former;
 
-use Illuminate\Support\Facades\Form;
 use Illuminate\Support\MessageBag;
-use Illuminate\Support\Facades\Input;
-use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Request;
-
+use Illuminate\Config\Repository as Config;
+use Illuminate\Session\Store as Session;
 use Illuminate\Html\FormBuilder;
 use Illuminate\Html\HtmlBuilder;
 use Illuminate\Routing\UrlGenerator;
@@ -15,7 +11,7 @@ use Illuminate\Routing\UrlGenerator;
  * Laravel 4 form builder
  *
  * @author  Joonas Järnstedt
- * @version 0.1
+ * @version 0.2
  */
 class Former extends FormBuilder {
 
@@ -49,25 +45,26 @@ class Former extends FormBuilder {
      * @param \Illuminate\Html\HtmlBuilder $html
      * @param  
      */
-    public function __construct(HtmlBuilder $html, UrlGenerator $url, $csrfToken)
+    public function __construct(HtmlBuilder $html, UrlGenerator $url, Session $session, Config $config)
     {
         $this->url = $url;
         $this->html = $html;
-        $this->csrfToken = $csrfToken;
+        $this->csrfToken = $session->getToken();
+        $this->config = $config;
         $this->loadConfig();
-        $this->errors = Session::get('errors');
+        $this->errors = $session->get('errors');
+        $this->session = $session;
     }
 
     /**
-     * Static function to instantiate the class
+     * Function to instantiate the class
      *
      * @param  array $defaults
      * @return class
      */
     public function make($defaults = array())
     {
-        $this->setDefaults($defaults);
-        return $this;
+        return $this->setDefaults($defaults);
     }
 
     /**
@@ -80,16 +77,13 @@ class Former extends FormBuilder {
         $options = array('formClass', 'autocomplete', 'nameAsId', 'idPrefix', 'requiredLabel', 'requiredPrefix',
             'requiredSuffix', 'requiredClass', 'controlGroupError', 'displayInlineErrors', 'commentClass'
         );
-
         foreach($options as $option) {
-            $this->options[$option] = Config::get('former::' . $option);
+            $this->options[$option] = $this->config->get('former::' . $option);
         }
     }
 
     /**
      * Set form defaults
-     *
-     * This would usually be done via the static make() function
      *
      * @param  array $defaults
      * @return class
@@ -180,7 +174,7 @@ class Former extends FormBuilder {
             $attributes['autocomplete'] = $this->getOption('autocomplete');
         }
         unset($attributes['autocomplete']);
-        return Form::open($attributes);
+        return parent::open($attributes);
     }
 
     /**
@@ -195,7 +189,7 @@ class Former extends FormBuilder {
     {
         $value = $this->calculateValue($name, $value);
 
-        return Form::hidden($name, $value, $attributes);
+        return parent::hidden($name, $value, $attributes);
     }
 
     /**
@@ -211,7 +205,7 @@ class Former extends FormBuilder {
     {
         $value = $this->calculateValue($name, $value);
         $attributes = $this->setAttributes($name, $attributes);
-        $field = Form::text($name, $value, $attributes);
+        $field = parent::text($name, $value, $attributes);
 
         return $this->buildWrapper($field, $name, $label);
     }
@@ -233,7 +227,7 @@ class Former extends FormBuilder {
         {
             $attributes['rows'] = 4;
         }
-        $field = Form::textarea($name, $value, $attributes);
+        $field = parent::textarea($name, $value, $attributes);
 
         return $this->buildWrapper($field, $name, $label);
     }
@@ -249,7 +243,7 @@ class Former extends FormBuilder {
     public function password($name, $label = '', $attributes = array())
     {
         $attributes = $this->setAttributes($name, $attributes);
-        $field = Form::password($name, $attributes);
+        $field = parent::password($name, $attributes);
 
         return $this->buildWrapper($field, $name, $label);
     }
@@ -268,7 +262,7 @@ class Former extends FormBuilder {
     {
         $selected = $this->calculateValue($name, $selected);
         $attributes = $this->setAttributes($name, $attributes);
-        $field = Form::select($name, $options, $selected, $attributes);
+        $field = parent::select($name, $options, $selected, $attributes);
 
         return $this->buildWrapper($field, $name, $label);
     }
@@ -287,7 +281,7 @@ class Former extends FormBuilder {
     {
         $checked = $this->calculateValue($name, $checked);
         $attributes = $this->setAttributes($name, $attributes);
-        $field = Form::checkbox($name, $value, $checked, $attributes);
+        $field = parent::checkbox($name, $value, $checked, $attributes);
 
         return $this->buildWrapper($field, $name, $label, true);
     }
@@ -306,7 +300,7 @@ class Former extends FormBuilder {
         $checked = $this->calculateValue($name, $checked, $value);
         $attributes = $this->setAttributes($name, $attributes);
 
-        return Form::radio($name, $value, $checked, $attributes);
+        return parent::radio($name, $value, $checked, $attributes);
     }
 
     /**
@@ -320,7 +314,7 @@ class Former extends FormBuilder {
     public function file($name, $attributes = array())
     {
         $attributes = $this->setAttributes($name, $attributes);
-        $field = Form::file($name, $attributes);
+        $field = parent::file($name, $attributes);
 
         return $this->buildWrapper($field, $name, $label);
     }
@@ -413,7 +407,7 @@ class Former extends FormBuilder {
                 $class .= ' ' . $this->getOption('requiredClass');
             }
             $name = $this->getOption('idPrefix') . $name;
-            $out .= Form::label($name, $label, $attributes);
+            $out .= parent::label($name, $label, $attributes);
         }
 
         return $out;
@@ -435,15 +429,15 @@ class Former extends FormBuilder {
     private function calculateValue($name, $default = '', $radioValue = '')
     {
         $result = '';
-
+        $oldInput = $this->session->getOldInput($name);
         // First check if there is post data
         // This assumes that you are redirecting after failed post
         // and that you have flashed the data
         // @see http://laravel.com/docs/input#old-input
-        if (Input::old($name) !== null) {
+        if ($oldInput !== null) {
             $result = ($radioValue)
-                ? Input::old($name) == $radioValue
-                : Input::old($name, $default);
+                ? $oldInput == $radioValue
+                : $this->session->getOldInput($name, $default);
 
         }
 

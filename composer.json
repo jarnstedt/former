@@ -2,7 +2,7 @@
     "name": "jarnstedt/former",
     "description": "Laravel 4 form builder",
     "homepage": "https://github.com/jarnstedt/former",
-    "keywords": ["laravel", "Form"]
+    "keywords": ["laravel", "Form"],
     "authors": [
         {
             "name": "jarnstedt",

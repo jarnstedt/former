@@ -12,13 +12,27 @@ class FormerServiceProvider extends ServiceProvider {
 	protected $defer = false;
 
 	/**
+	 * Bootstrap the application events.
+	 *
+	 * @return void
+	 */
+	public function boot()
+	{
+		$this->package('jarnstedt/former');
+	}
+
+	/**
 	 * Register the service provider.
 	 *
 	 * @return void
 	 */
 	public function register()
 	{
-		//
+		$this->app['former'] = $this->app->share(function($app)
+		{
+			$form = new Former($app['html'], $app['url'], $app['session.store']->getToken());
+			return $form->setSessionStore($app['session.store']);
+		});
 	}
 
 	/**
@@ -28,7 +42,7 @@ class FormerServiceProvider extends ServiceProvider {
 	 */
 	public function provides()
 	{
-		return array();
+		return array('former');
 	}
 
 }

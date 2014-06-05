@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Request;
 
 use Illuminate\Html\FormBuilder;
+use Illuminate\Html\HtmlBuilder;
+use Illuminate\Routing\UrlGenerator;
 
 /**
  * Laravel 4 form builder
@@ -23,7 +25,7 @@ class Former extends FormBuilder {
     protected $defaults = array();
 
     /**
-     * The options for Formly
+     * The options for Former
      *
      * @var array
      */
@@ -44,12 +46,15 @@ class Former extends FormBuilder {
     /**
      * Class constructor
      *
-     * @param array $defaults
+     * @param \Illuminate\Html\HtmlBuilder $html
+     * @param  
      */
-    public function __construct($defaults = array())
+    public function __construct(HtmlBuilder $html, UrlGenerator $url, $csrfToken)
     {
+        $this->url = $url;
+        $this->html = $html;
+        $this->csrfToken = $csrfToken;
         $this->loadConfig();
-        $this->setDefaults($defaults);
         $this->errors = Session::get('errors');
     }
 
@@ -59,9 +64,10 @@ class Former extends FormBuilder {
      * @param  array $defaults
      * @return class
      */
-    public static function make($defaults = array())
+    public function make($defaults = array())
     {
-        return new static($defaults);
+        $this->setDefaults($defaults);
+        return $this;
     }
 
     /**
@@ -76,7 +82,7 @@ class Former extends FormBuilder {
         );
 
         foreach($options as $option) {
-            $this->options[$option] = Config::get('formly::' . $option);
+            $this->options[$option] = Config::get('former::' . $option);
         }
     }
 
@@ -317,6 +323,18 @@ class Former extends FormBuilder {
         $field = Form::file($name, $attributes);
 
         return $this->buildWrapper($field, $name, $label);
+    }
+
+    /**
+     * Create a HTML label element
+     * @param  string $name 
+     * @param  string $value 
+     * @param  string $attributes 
+     * @return string
+     */
+    public function label($name, $value = null, $attributes = array())
+    {
+        return $this->buildLabel($name, $value);
     }
 
     /**

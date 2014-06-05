@@ -9,27 +9,58 @@ use Illuminate\Html\FormBuilder;
 
 class FormerTest extends \PHPUnit_Framework_TestCase {
 
-    protected function setUp()
+    public function setUp()
     {
+        parent::setUp();
         $this->urlGenerator = new UrlGenerator(new RouteCollection, Request::create('/foo', 'GET'));
         $this->htmlBuilder = new HtmlBuilder($this->urlGenerator);
+        $this->config = m::mock('\Illuminate\Config\Repository');
+        $this->session = m::mock('\Illuminate\Session\Store');
+        $this->config->shouldReceive('get')
+            ->andReturn('');
+
+        $this->session->shouldReceive('get')
+            ->once()
+            ->andReturn(array());
+        $this->session->shouldReceive('getToken')
+            ->once()
+            ->andReturn('');
+        
+        $this->former = new Former(
+            $this->htmlBuilder,
+            $this->urlGenerator,
+            $this->session,
+            $this->config
+        );
     }
 
-    protected function tearDown()
+    public function tearDown()
     {
         m::close();
     }
 
+    /**
+     * Test creating Former object
+     */
     public function testCreate()
     {
+        $this->assertInstanceOf('Jarnstedt\Former\Former', $this->former);
+    }
 
-        // $html = m::mock('HtmlBuilder');
-        // $url = m::mock('UrlGenerator');
-        // $csrfToken = 'test';
+    public function testMakeWithNoParameters()
+    {
+        $result = $this->former->make();
+        $this->assertInstanceOf('Jarnstedt\Former\Former', $result);
+    }
 
-        $form = new Former($this->htmlBuilder, $this->urlGenerator, '');
+    public function testOpen()
+    {
+        $result = $this->former->make(array('foo' => 'bar'));
+        $this->assertInstanceOf('Jarnstedt\Former\Former', $result);
+        $this->session->shouldReceive('getOldInput')->andReturn('test');
+        $html = $result->open();
 
-        // $this->assertNotNull($form);
+        $this->assertStringEndsWith('value="test">', $html);
     }
 
 }

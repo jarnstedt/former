@@ -334,7 +334,7 @@ class Former extends FormBuilder {
      */
     public function label($name, $value = null, $attributes = array())
     {
-        return $this->buildLabel($name, $value);
+        return $this->buildLabel($name, $value, $attributes);
     }
 
     /**
@@ -399,17 +399,21 @@ class Former extends FormBuilder {
      * @param  string  $label The label name
      * @return string
      */
-    private function buildLabel($name, $label = '')
+    private function buildLabel($name, $label = '', $attributes = array())
     {
         $out = '';
         if (!empty($label)) {
-            $class = 'control-label';
+            if (!empty($attributes['class'])) {
+                $attributes['class'] .= ' control-label';
+            } else {
+                $attributes['class'] = 'control-label';
+            }
             if ($this->getOption('requiredLabel') && substr($label, -strlen($this->getOption('requiredLabel'))) == $this->getOption('requiredLabel')) {
                 $label = $this->getOption('requiredPrefix') . str_replace($this->getOption('requiredLabel'), '', $label) . $this->getOption('requiredSuffix');
                 $class .= ' ' . $this->getOption('requiredClass');
             }
             $name = $this->getOption('idPrefix') . $name;
-            $out .= Form::label($name, $label, array('class' => $class));
+            $out .= Form::label($name, $label, $attributes);
         }
 
         return $out;

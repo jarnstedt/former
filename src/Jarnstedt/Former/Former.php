@@ -11,7 +11,7 @@ use Illuminate\Routing\UrlGenerator;
  * Laravel 4 form builder
  *
  * @author  Joonas Järnstedt
- * @version 0.31
+ * @version 0.32
  */
 class Former extends FormBuilder {
 
@@ -64,6 +64,9 @@ class Former extends FormBuilder {
      */
     public function make($defaults = array())
     {
+        if (is_object($defaults)) {
+            $this->setModel($defaults);
+        }
         return $this->setDefaults($defaults);
     }
 
@@ -259,23 +262,31 @@ class Former extends FormBuilder {
      * @return string
      */
     public function select($name, $label = '', $options = array(), $selected = null, $attributes = array())
-    {
-        // If array of objects, create array from objects
-        if (is_array($options) and isset(array_values($options)[0]) and count(array_values($options)[0]) == 2) {
-            $array = array();
-            list($key) = array_keys($options);
-            $values = $options[$key];
-            foreach ($values as $option) {
-                $array[$option->id] = $option->{$key};
-            }
-            $options = $array;
+    {        
+        $modelOptions = $this->getModelOptions($name);
+
+        if (!is_null($modelOptions)) {
+            $options = $modelOptions;
         }
-        
+
         $selected = $this->calculateValue($name, $selected);
         $attributes = $this->setAttributes($name, $attributes);
         $field = parent::select($name, $options, $selected, $attributes);
 
         return $this->buildWrapper($field, $name, $label);
+    }
+
+    /**
+     * Get select options from form model if set
+     * @param  $name Select name
+     * @return mixed
+     */
+    private function getModelOptions($name)
+    {
+        if (is_null($this->model)) {
+            return null;
+        }
+        return $this->model->{$name.'options'};
     }
 
     /**
@@ -457,9 +468,10 @@ class Former extends FormBuilder {
         }
 
         // check if there is a default value set specifically for this field
-        elseif ( ! empty($default))
-        {
+        elseif (!empty($default)) {
             $result = $default;
+        } elseif (!is_null($this->model)) {
+            $result = $this->model->{$name};
         }
 
         // lastly, check if any defaults have been set for the form as a whole

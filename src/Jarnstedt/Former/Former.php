@@ -372,13 +372,13 @@ class Former extends FormBuilder {
         $id = ($this->getOption('nameAsId')) ? ' id="control-group-'.$name.'"' : '';
         $out  = '<div class="'.$class.'"'.$id.'>';
         $out .= $this->buildLabel($name, $label);
-        $out .= '<div class="controls">'.PHP_EOL;
-        $out .= ($checkbox === true) ? '<label class="checkbox">' : '';
+        if ($checkbox !== true) {
+            $out .= '<div class="controls">'.PHP_EOL;
+        }
+        $out .= ($checkbox === true and !empty($field)) ? '<label class="checkbox">' : '';
         $out .= $field;
 
         if ($this->getOption('displayInlineErrors') && ! empty($error)) {
-            // L4 errors already have this class
-            //$out .= '<span class="help-inline">'.$error.'</span>';
             $out .= $error;
         }
 
@@ -386,12 +386,16 @@ class Former extends FormBuilder {
             if (!empty($this->comments[$name])) {
                 $out .= $comment;
             }
-            $out .= '</label>';
+            if (!empty($field)) {
+                $out .= '</label>';
+            }
         } else {
             $out .= $comment;
         }
 
-        $out .= '</div>';
+        if ($checkbox !== true) {
+            $out .= '</div>';
+        }
         $out .= '</div>'.PHP_EOL;
 
         return $out;

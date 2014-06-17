@@ -286,7 +286,7 @@ class Former extends FormBuilder {
         if (is_null($this->model)) {
             return null;
         }
-        return $this->model->{$name.'options'};
+        return $this->model->{$name.'Options'}();
     }
 
     /**

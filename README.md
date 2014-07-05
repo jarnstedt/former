@@ -25,9 +25,13 @@ Add this to `aliases` array.
 ### Usage
 Example form
 ```php
-$form = Former::make(User::find(1));
+// controller
+$user = User::find(1);
+$form = Former::make($user);
+
+// view
 {{ $form->open() }}
-{{ $form->text('name', 'Name.req', 'default value', array('class' => 'name')) }}
+{{ $form->text('name', 'Your name.req', 'default value', array('class' => 'className')) }}
 {{ $form->submit('Save') }}
 {{ $form->close() }}
 ```

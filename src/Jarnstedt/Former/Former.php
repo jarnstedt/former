@@ -508,7 +508,11 @@ class Former extends FormBuilder {
         }
 
         // add "form-control" class to all inputs
-        $attributes['class'] .= ' form-control';
+        if (empty($attributes['class'])) {
+            $attributes['class'] = ' form-control';
+        } else {
+            $attributes['class'] .= ' form-control';
+        }
 
         return $attributes;
     }

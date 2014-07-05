@@ -79,6 +79,10 @@ class FormerTest extends \PHPUnit_Framework_TestCase {
         $this->assertContains('Text', $text);
         $this->assertContains('default value', $text);
         $this->assertContains('custom-class', $text);
+
+        $text2 = $form->text('foobar', null, null, array('attribute' => 'something'));
+        $this->assertContains('name="foobar"', $text2);
+        $this->assertContains('attribute="something"', $text2);
     }
 
 }

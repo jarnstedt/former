@@ -11,7 +11,7 @@ use Illuminate\Routing\UrlGenerator;
  * Laravel 4 form builder
  *
  * @author  Joonas Järnstedt
- * @version 0.32
+ * @version 0.4
  */
 class Former extends FormBuilder {
 
@@ -375,7 +375,7 @@ class Former extends FormBuilder {
             $comment .= '</div>';
         }
 
-        $class = 'control-group';
+        $class = 'form-group';
         if ($this->getOption('controlGroupError') && ! empty($error)) {
             $class .= ' ' . $this->getOption('controlGroupError');
         }
@@ -383,9 +383,7 @@ class Former extends FormBuilder {
         $id = ($this->getOption('nameAsId')) ? ' id="control-group-'.$name.'"' : '';
         $out  = '<div class="'.$class.'"'.$id.'>';
         $out .= $this->buildLabel($name, $label);
-        if ($checkbox !== true) {
-            $out .= '<div class="controls">'.PHP_EOL;
-        }
+
         $out .= ($checkbox === true and !empty($field)) ? '<label class="checkbox">' : '';
         $out .= $field;
 
@@ -404,9 +402,6 @@ class Former extends FormBuilder {
             $out .= $comment;
         }
 
-        if ($checkbox !== true) {
-            $out .= '</div>';
-        }
         $out .= '</div>'.PHP_EOL;
 
         return $out;
@@ -511,6 +506,9 @@ class Former extends FormBuilder {
         if (isset($attributes['disabled']) && !$attributes['disabled']) {
             unset($attributes['disabled']);
         }
+
+        // add "form-control" class to all inputs
+        $attributes['class'] .= ' form-control';
 
         return $attributes;
     }

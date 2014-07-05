@@ -68,7 +68,6 @@ class FormerTest extends \PHPUnit_Framework_TestCase {
      */
     public function testText()
     {
-
         // mock old input
         $this->session->shouldReceive('getOldInput')
             ->andReturn(null);
@@ -79,8 +78,7 @@ class FormerTest extends \PHPUnit_Framework_TestCase {
         $this->assertContains('for="name"', $text);
         $this->assertContains('Text', $text);
         $this->assertContains('default value', $text);
-        $this->assertContains('class="custom-class"', $text);
-        print_r($text);
+        $this->assertContains('custom-class', $text);
     }
 
 }

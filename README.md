@@ -1,4 +1,4 @@
-Former
+Former [![Build Status](https://travis-ci.org/jarnstedt/former.svg?branch=master)](https://travis-ci.org/jarnstedt/former)
 ======
 
 Laravel 4 form builder with Twitter Bootstrap styling. Extends Laravels own form builder.

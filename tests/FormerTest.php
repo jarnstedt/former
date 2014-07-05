@@ -85,4 +85,24 @@ class FormerTest extends \PHPUnit_Framework_TestCase {
         $this->assertContains('attribute="something"', $text2);
     }
 
+    /**
+     * Test select input field
+     */
+    public function testSelect()
+    {
+        // mock old input
+        $this->session->shouldReceive('getOldInput')
+            ->andReturn(null);
+
+        $form = $this->former->make();
+        $options = array(
+            'Example',
+            'First',
+            'Second',
+        );
+        $html = $form->select('foobar', 'Label', $options);
+        $this->assertContains('name="foobar"', $html);
+        $this->assertContains('Label', $html);
+    }
+
 }

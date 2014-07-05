@@ -430,7 +430,7 @@ class Former extends FormBuilder {
             }
             if ($this->getOption('requiredLabel') && substr($label, -strlen($this->getOption('requiredLabel'))) == $this->getOption('requiredLabel')) {
                 $label = $this->getOption('requiredPrefix') . str_replace($this->getOption('requiredLabel'), '', $label) . $this->getOption('requiredSuffix');
-                $class .= ' ' . $this->getOption('requiredClass');
+                $attributes['class'] .= ' ' . $this->getOption('requiredClass');
             }
             $name = $this->getOption('idPrefix') . $name;
             $out .= parent::label($name, $label, $attributes);

@@ -1,6 +1,6 @@
 {
     "name": "jarnstedt/former",
-    "description": "Laravel 4 form builder",
+    "description": "Laravel 4 form builder with Twitter Bootstrap styling",
     "homepage": "https://github.com/jarnstedt/former",
     "keywords": ["laravel", "Form"],
     "authors": [

@@ -63,4 +63,24 @@ class FormerTest extends \PHPUnit_Framework_TestCase {
         $this->assertStringEndsWith('value="test">', $html);
     }
 
+    /**
+     * Test text input field
+     */
+    public function testText()
+    {
+
+        // mock old input
+        $this->session->shouldReceive('getOldInput')
+            ->andReturn(null);
+
+        $form = $this->former->make();
+        $text = $form->text('name', 'Text.req', 'default value', array('class' => 'custom-class'));
+
+        $this->assertContains('for="name"', $text);
+        $this->assertContains('Text', $text);
+        $this->assertContains('default value', $text);
+        $this->assertContains('class="custom-class"', $text);
+        print_r($text);
+    }
+
 }

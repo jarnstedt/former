@@ -380,7 +380,7 @@ class Former extends FormBuilder {
             $class .= ' ' . $this->getOption('controlGroupError');
         }
 
-        $id = ($this->getOption('nameAsId')) ? ' id="control-group-'.$name.'"' : '';
+        $id = ($this->getOption('nameAsId')) ? ' id="form-group-'.$name.'"' : '';
         $out  = '<div class="'.$class.'"'.$id.'>';
         $out .= $this->buildLabel($name, $label);
 

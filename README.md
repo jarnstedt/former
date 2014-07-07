@@ -3,6 +3,9 @@ Former [![Build Status](https://travis-ci.org/jarnstedt/former.svg?branch=master
 
 Laravel 4 form builder with Twitter Bootstrap styling. Extends Laravels own form builder.
 
+* Set form defaults
+* Repopulate forms
+* Show validation errors
 
 ### Install
 Add this to composer.json and run `composer update`.

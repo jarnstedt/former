@@ -262,7 +262,7 @@ class Former extends FormBuilder {
      * @return string
      */
     public function select($name, $label = '', $options = array(), $selected = null, $attributes = array())
-    {        
+    {
         $modelOptions = $this->getModelOptions($name);
 
         if (!is_null($modelOptions)) {
@@ -364,10 +364,10 @@ class Former extends FormBuilder {
      */
     private function buildWrapper($field, $name, $label = '', $checkbox = false)
     {
-        if ($this->errors and $this->errors instanceof MessageBag) {
+        if ($this->errors and $this->errors instanceof \Illuminate\Support\ViewErrorBag) {
             $error = $this->errors->first($name);
         }
-
+        
         $comment = '';
         if (!empty($this->comments[$name])) {
             $comment = '<div class="'.$this->getOption('commentClass').'">';
@@ -376,7 +376,7 @@ class Former extends FormBuilder {
         }
 
         $class = 'form-group';
-        if ($this->getOption('controlGroupError') && ! empty($error)) {
+        if ($this->getOption('controlGroupError') and !empty($error)) {
             $class .= ' ' . $this->getOption('controlGroupError');
         }
 
@@ -387,7 +387,7 @@ class Former extends FormBuilder {
         $out .= ($checkbox === true and !empty($field)) ? '<label class="checkbox">' : '';
         $out .= $field;
 
-        if ($this->getOption('displayInlineErrors') && ! empty($error)) {
+        if ($this->getOption('displayInlineErrors') and !empty($error)) {
             $out .= $error;
         }
 

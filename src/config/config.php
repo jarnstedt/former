@@ -18,9 +18,9 @@ return array(
 
     'requiredClass' => 'label-required',
 
-    'controlGroupError' => 'error',
+    'controlGroupError' => 'has-error',
 
     'displayInlineErrors' => false,
 
-    'commentClass' => 'field-comment'
+    'commentClass' => 'help-block'
 );

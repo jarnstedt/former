@@ -35,6 +35,7 @@ $form = Former::make($user);
 // view
 {{ $form->open() }}
 {{ $form->text('name', 'Your name.req', 'default value', array('class' => 'className')) }}
+{{ $form->select('city', 'City', array('City1', 'City2')) }}
 {{ $form->submit('Save') }}
 {{ $form->close() }}
 ```

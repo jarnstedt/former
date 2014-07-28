@@ -105,4 +105,20 @@ class FormerTest extends \PHPUnit_Framework_TestCase {
         $this->assertContains('Label', $html);
     }
 
+    /**
+     * Test submit button
+     */
+    public function testSubmit()
+    {
+        // mock old input
+        $this->session->shouldReceive('getOldInput')
+            ->andReturn(null);
+
+        $form = $this->former->make();
+        $btn1 = $form->submit("Submit");
+        $this->assertEquals('<button type="submit" class="btn">Submit</button>', $btn1);
+        $btn2 = $form->submit("Submit", array('class' => 'foobar'));
+        $this->assertContains('foobar', $btn2);
+    }
+
 }

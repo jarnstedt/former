@@ -11,7 +11,7 @@ use Illuminate\Routing\UrlGenerator;
  * Laravel 4 form builder
  *
  * @author  Joonas Järnstedt
- * @version 0.4
+ * @version 0.5
  */
 class Former extends FormBuilder {
 
@@ -263,7 +263,10 @@ class Former extends FormBuilder {
      */
     public function select($name, $label = '', $options = array(), $selected = null, $attributes = array())
     {
-        $modelOptions = $this->getModelOptions($name);
+        $modelOptions = null;
+        if (empty($options)) {
+            $modelOptions = $this->getModelOptions($name);
+        }
 
         if (!is_null($modelOptions)) {
             $options = $modelOptions;

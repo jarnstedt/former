@@ -121,4 +121,31 @@ class FormerTest extends \PHPUnit_Framework_TestCase {
         $this->assertContains('foobar', $btn2);
     }
 
+    /**
+     * Test getting default values from old input
+     */
+    public function testOldInput()
+    {
+        $this->session->shouldReceive('getOldInput')
+            ->andReturn('foobar');
+        $form = $this->former->make();
+        $text = $form->text('test');
+        $this->assertContains('foobar', $text);
+    }
+
+    /**
+     * Test getting default values from model
+     */
+    public function testFormModel()
+    {
+        $this->session->shouldReceive('getOldInput')
+            ->andReturn(null);
+
+        $obj = m::mock('Obj');
+        $obj->test = 'foobar';
+
+        $form = $this->former->make($obj);
+        $text = $form->text('test');
+        $this->assertContains('foobar', $text);
+    }
 }

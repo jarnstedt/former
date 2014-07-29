@@ -143,9 +143,15 @@ class FormerTest extends \PHPUnit_Framework_TestCase {
 
         $obj = m::mock('Obj');
         $obj->test = 'foobar';
+        $obj->id = 3;
 
+        // Text field
         $form = $this->former->make($obj);
         $text = $form->text('test');
         $this->assertContains('foobar', $text);
+
+        // Select field
+        $select = $form->select('id', null, array(1 => 'foo', 2 => 'bar', 3 => 'test', 4 => 'foobar'));
+        $this->assertContains('value="3" selected', $select);
     }
 }

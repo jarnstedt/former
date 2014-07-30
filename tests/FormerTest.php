@@ -106,6 +106,24 @@ class FormerTest extends \PHPUnit_Framework_TestCase {
     }
 
     /**
+     * Test file input field
+     */
+    public function testFile()
+    {
+        // mock old input
+        $this->session->shouldReceive('getOldInput')
+            ->andReturn(null);
+
+        $form = $this->former->make();
+        $file1 = $form->file('test');
+        $this->assertContains('name="test"', $file1);
+        $this->assertContains('type="file"', $file1);
+        $file2 = $form->file('foobar', array('class' => 'something'));
+        $this->assertContains('name="foobar"', $file2);
+        $this->assertContains('class="something', $file2);
+    }
+
+    /**
      * Test submit button
      */
     public function testSubmit()

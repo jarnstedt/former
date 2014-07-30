@@ -325,17 +325,18 @@ class Former extends FormBuilder {
 
     /**
      * Create a HTML file input element.
-     *
+     * TODO: add labels
+     * 
      * @param  string  $name
      * @param  string  $label
      * @param  array   $attributes
      * @return string
      */
-    public function file($name, $label, $attributes = array())
+    public function file($name, $attributes = array())
     {
         $attributes = $this->setAttributes($name, $attributes);
         $field = parent::file($name, $attributes);
-
+        $label = '';
         return $this->buildWrapper($field, $name, $label);
     }
 

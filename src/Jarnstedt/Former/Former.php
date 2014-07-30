@@ -11,7 +11,7 @@ use Illuminate\Routing\UrlGenerator;
  * Laravel 4 form builder
  *
  * @author  Joonas Järnstedt
- * @version 0.6
+ * @version 0.61
  */
 class Former extends FormBuilder {
 
@@ -43,7 +43,9 @@ class Former extends FormBuilder {
      * Class constructor
      *
      * @param \Illuminate\Html\HtmlBuilder $html
-     * @param  
+     * @param \Illuminate\Routing\UrlGenerator $url
+     * @param \Illuminate\Session\Store $session
+     * @param \Illuminate\Config\Repository $config
      */
     public function __construct(HtmlBuilder $html, UrlGenerator $url, Session $session, Config $config)
     {
@@ -60,7 +62,7 @@ class Former extends FormBuilder {
      * Function to instantiate the class
      *
      * @param  array $defaults
-     * @return class
+     * @return self
      */
     public function make($defaults = array())
     {
@@ -72,6 +74,8 @@ class Former extends FormBuilder {
 
     /**
      * Load all the default config options
+     *
+     * @return void
      */
     private function loadConfig()
     {
@@ -105,9 +109,9 @@ class Former extends FormBuilder {
      *
      * Call with option key and value, or an array of options
      *
-     * @param string|array $key
-     * @param string $value
-     * @return class
+     * @param  string|array $key
+     * @param  string       $value
+     * @return self
      */
     public function setOption($key, $value = '')
     {
@@ -137,9 +141,9 @@ class Former extends FormBuilder {
      * Call with the field name and the comment, or an array
      * of comments
      *
-     * @param mixed $name
-     * @param string $comment
-     * @return class
+     * @param  mixed  $name
+     * @param  string $comment
+     * @return self
      */
     public function setComments($name, $comment = '')
     {
@@ -156,7 +160,7 @@ class Former extends FormBuilder {
      * Overrides the base form open method to allow for automatic insertion of csrf tokens
      * and form class
      *
-     * @param array  $attributes
+     * @param  array  $attributes
      * @return string
      */
     public function open(array $attributes = array())
@@ -194,10 +198,10 @@ class Former extends FormBuilder {
     /**
      * Create a HTML text input element.
      *
-     * @param string $name
-     * @param string $label
-     * @param null   $value
-     * @param array  $attributes
+     * @param  string $name
+     * @param  string $label
+     * @param  null   $value
+     * @param  array  $attributes
      * @return string
      */
     public function text($name, $label = '', $value = null, $attributes = array())
@@ -212,10 +216,10 @@ class Former extends FormBuilder {
     /**
      * Create a HTML textarea input element.
      *
-     * @param string $name
-     * @param string $label
-     * @param null $value
-     * @param array $attributes
+     * @param  string $name
+     * @param  string $label
+     * @param  null $value
+     * @param  array $attributes
      * @return string
      */
     public function textarea($name, $label = '', $value = null, $attributes = array())
@@ -276,6 +280,7 @@ class Former extends FormBuilder {
 
     /**
      * Get select options from form model if set
+     * 
      * @param  $name Select name
      * @return mixed
      */
@@ -342,9 +347,10 @@ class Former extends FormBuilder {
 
     /**
      * Create a HTML label element
-     * @param  string $name 
-     * @param  string $value 
-     * @param  string $attributes 
+     * 
+     * @param  string  $name 
+     * @param  string  $value 
+     * @param  array   $attributes 
      * @return string
      */
     public function label($name, $value = null, $attributes = array())
@@ -411,6 +417,7 @@ class Former extends FormBuilder {
      *
      * @param  string  $name The name of the html field
      * @param  string  $label The label name
+     * @param  array   $attributes
      * @return string
      */
     private function buildLabel($name, $label = '', $attributes = array())
@@ -532,7 +539,6 @@ class Former extends FormBuilder {
      *
      * @param  string $value        Button text
      * @param  array  $attributes
-     * @param  string $btn_class
      * @return mixed
      */
     public function submit($value = null, $attributes = array())

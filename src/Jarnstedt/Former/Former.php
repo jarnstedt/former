@@ -11,7 +11,7 @@ use Illuminate\Routing\UrlGenerator;
  * Laravel 4 form builder
  *
  * @author  Joonas Järnstedt
- * @version 0.5
+ * @version 0.6
  */
 class Former extends FormBuilder {
 
@@ -52,7 +52,7 @@ class Former extends FormBuilder {
         $this->csrfToken = $session->getToken();
         $this->config = $config;
         $this->loadConfig();
-        $this->errors = $session->get('errors');
+        $this->errors = $session->get('error');
         $this->session = $session;
     }
 
@@ -80,7 +80,7 @@ class Former extends FormBuilder {
         $options = array('formClass', 'autocomplete', 'nameAsId', 'idPrefix', 'requiredLabel', 'requiredPrefix',
             'requiredSuffix', 'requiredClass', 'controlGroupError', 'displayInlineErrors', 'commentClass'
         );
-        foreach($options as $option) {
+        foreach ($options as $option) {
             $this->options[$option] = $this->config->get('former::' . $option);
         }
     }
@@ -162,18 +162,14 @@ class Former extends FormBuilder {
     public function open(array $attributes = array())
     {
         // Add in the form class if necessary
-        if (empty($attributes['class']))
-        {
+        if (empty($attributes['class'])) {
             $attributes['class'] =  $this->getOption('formClass');
-        }
-        elseif (strpos($attributes['class'], 'form-') === false)
-        {
+        } elseif (strpos($attributes['class'], 'form-') === false) {
             $attributes['class'] .= ' ' . $this->getOption('formClass');
         }
 
         // Auto-complete attribute
-        if (empty($attributes['autocomplete']))
-        {
+        if (empty($attributes['autocomplete'])) {
             $attributes['autocomplete'] = $this->getOption('autocomplete');
         }
         unset($attributes['autocomplete']);
@@ -226,8 +222,7 @@ class Former extends FormBuilder {
     {
         $value = $this->calculateValue($name, $value);
         $attributes = $this->setAttributes($name, $attributes);
-        if ( ! isset($attributes['rows']))
-        {
+        if (!isset($attributes['rows'])) {
             $attributes['rows'] = 4;
         }
         $field = parent::textarea($name, $value, $attributes);
@@ -336,7 +331,7 @@ class Former extends FormBuilder {
      * @param  array   $attributes
      * @return string
      */
-    public function file($name, $attributes = array())
+    public function file($name, $label, $attributes = array())
     {
         $attributes = $this->setAttributes($name, $attributes);
         $field = parent::file($name, $attributes);
@@ -367,7 +362,7 @@ class Former extends FormBuilder {
      */
     private function buildWrapper($field, $name, $label = '', $checkbox = false)
     {
-        if ($this->errors and $this->errors instanceof \Illuminate\Support\ViewErrorBag) {
+        if ($this->errors and $this->errors instanceof \Illuminate\Support\MessageBag) {
             $error = $this->errors->first($name);
         }
         
@@ -463,18 +458,14 @@ class Former extends FormBuilder {
                 ? $oldInput == $radioValue
                 : $this->session->getOldInput($name, $default);
 
-        }
-
         // check if there is a default value set specifically for this field
-        elseif (!empty($default)) {
+        } elseif (!empty($default)) {
             $result = $default;
         } elseif (!is_null($this->model)) {
             $result = $this->model->{$name};
-        }
 
         // lastly, check if any defaults have been set for the form as a whole
-        elseif (isset($this->defaults->$name))
-        {
+        } elseif (isset($this->defaults->$name)) {
             $result = ($radioValue)
                 ? $this->defaults->$name == $radioValue
                 : $this->defaults->$name;

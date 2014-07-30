@@ -520,21 +520,6 @@ class Former extends FormBuilder {
     }
 
     /**
-     * Create a group of form actions (buttons).
-     *
-     * @param  mixed  $buttons  String or array of HTML buttons.
-     * @return string
-     */
-    public function actions($buttons)
-    {
-        $out  = '<div class="form-actions">';
-        $out .= is_array($buttons) ? implode('', $buttons) : $buttons;
-        $out .= '</div>';
-
-        return $out;
-    }
-
-    /**
      * Create a HTML submit input element.
      *
      * @param  string $value        Button text

@@ -20,7 +20,7 @@ return array(
 
     'controlGroupError' => 'has-error',
 
-    'displayInlineErrors' => false,
+    'displayInlineErrors' => true,
 
     'commentClass' => 'help-block'
 );

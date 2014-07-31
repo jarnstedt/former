@@ -11,7 +11,7 @@ use Illuminate\Routing\UrlGenerator;
  * Laravel 4 form builder
  *
  * @author  Joonas Järnstedt
- * @version 0.61
+ * @version 0.62
  */
 class Former extends FormBuilder {
 
@@ -54,8 +54,8 @@ class Former extends FormBuilder {
         $this->csrfToken = $session->getToken();
         $this->config = $config;
         $this->loadConfig();
-        $this->errors = $session->get('error');
         $this->session = $session;
+        $this->errors = $session->get('errors');
     }
 
     /**
@@ -369,9 +369,7 @@ class Former extends FormBuilder {
      */
     private function buildWrapper($field, $name, $label = '', $checkbox = false)
     {
-        if ($this->errors and $this->errors instanceof \Illuminate\Support\MessageBag) {
-            $error = $this->errors->first($name);
-        }
+        $error = $this->getError($name);
         
         $comment = '';
         if (!empty($this->comments[$name])) {
@@ -511,7 +509,7 @@ class Former extends FormBuilder {
 
         // add "form-control" class to all inputs
         if (empty($attributes['class'])) {
-            $attributes['class'] = ' form-control';
+            $attributes['class'] = 'form-control';
         } else {
             $attributes['class'] .= ' form-control';
         }
@@ -552,6 +550,20 @@ class Former extends FormBuilder {
         $attributes['type'] = 'reset';
         $attributes['class'] .= ' btn';
         return $this->button($value, $attributes);
+    }
+
+    /**
+     * Get error with key
+     * 
+     * @param   string  $key  Field name
+     * @return  string|null
+     */
+    private function getError($key)
+    {
+        if ($this->errors and $this->errors instanceof \Illuminate\Support\ViewErrorBag) {
+            return $this->errors->first($key);
+        }
+        return null;
     }
 
 }

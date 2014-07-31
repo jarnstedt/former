@@ -19,9 +19,13 @@ class FormerTest extends \PHPUnit_Framework_TestCase {
         $this->config->shouldReceive('get')
             ->andReturn('');
 
+        $bag = m::mock('bag');
+        $bag->shouldReceive('first')
+            ->andReturn('');
+
         $this->session->shouldReceive('get')
             ->once()
-            ->andReturn(array());
+            ->andReturn($bag);
         $this->session->shouldReceive('getToken')
             ->once()
             ->andReturn('');
@@ -172,4 +176,5 @@ class FormerTest extends \PHPUnit_Framework_TestCase {
         $select = $form->select('id', null, array(1 => 'foo', 2 => 'bar', 3 => 'test', 4 => 'foobar'));
         $this->assertContains('value="3" selected', $select);
     }
+
 }

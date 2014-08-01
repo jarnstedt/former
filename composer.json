@@ -1,11 +1,11 @@
 {
     "name": "jarnstedt/former",
     "description": "Laravel 4 form builder with Twitter Bootstrap styling",
-    "homepage": "https://github.com/jarnstedt/former",
-    "keywords": ["laravel", "Form"],
+    "keywords": ["laravel", "form", "builder"],
+    "license": "MIT",
     "authors": [
         {
-            "name": "jarnstedt",
+            "name": "Joonas Järnstedt",
             "email": "joonas@xnetti.net"
         }
     ],

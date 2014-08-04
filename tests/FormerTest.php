@@ -5,7 +5,6 @@ use Illuminate\Http\Request;
 use Illuminate\Html\HtmlBuilder;
 use Illuminate\Routing\UrlGenerator;
 use Illuminate\Routing\RouteCollection;
-use Illuminate\Html\FormBuilder;
 
 class FormerTest extends \PHPUnit_Framework_TestCase {
 

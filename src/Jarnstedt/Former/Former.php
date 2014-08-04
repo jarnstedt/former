@@ -1,6 +1,5 @@
 <?php namespace Jarnstedt\Former;
 
-use Illuminate\Support\MessageBag;
 use Illuminate\Config\Repository as Config;
 use Illuminate\Session\Store as Session;
 use Illuminate\Html\FormBuilder;
@@ -300,7 +299,6 @@ class Former extends FormBuilder {
      * @todo Add support for labels.
      * 
      * @param  string  $name
-     * @param  string  $label
      * @param  array   $attributes
      * @return string
      */

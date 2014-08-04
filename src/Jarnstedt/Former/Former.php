@@ -8,10 +8,10 @@ use Illuminate\Html\HtmlBuilder;
 use Illuminate\Routing\UrlGenerator;
 
 /**
- * Laravel 4 form builder
+ * Laravel 4 form builder with Twitter Bootstrap styling.
  *
  * @author  Joonas Järnstedt
- * @version 0.62
+ * @version 0.63
  */
 class Former extends FormBuilder {
 
@@ -42,10 +42,10 @@ class Former extends FormBuilder {
     /**
      * Class constructor
      *
-     * @param \Illuminate\Html\HtmlBuilder $html
-     * @param \Illuminate\Routing\UrlGenerator $url
-     * @param \Illuminate\Session\Store $session
-     * @param \Illuminate\Config\Repository $config
+     * @param \Illuminate\Html\HtmlBuilder      $html
+     * @param \Illuminate\Routing\UrlGenerator  $url
+     * @param \Illuminate\Session\Store         $session
+     * @param \Illuminate\Config\Repository     $config
      */
     public function __construct(HtmlBuilder $html, UrlGenerator $url, Session $session, Config $config)
     {
@@ -61,7 +61,7 @@ class Former extends FormBuilder {
     /**
      * Function to instantiate the class
      *
-     * @param  array $defaults
+     * @param  array  $defaults
      * @return self
      */
     public function make($defaults = array())
@@ -92,7 +92,7 @@ class Former extends FormBuilder {
     /**
      * Set form defaults
      *
-     * @param  array $defaults
+     * @param  array  $defaults
      * @return class
      */
     public function setDefaults($defaults = array())
@@ -109,8 +109,8 @@ class Former extends FormBuilder {
      *
      * Call with option key and value, or an array of options
      *
-     * @param  string|array $key
-     * @param  string       $value
+     * @param  string|array  $key
+     * @param  string        $value
      * @return self
      */
     public function setOption($key, $value = '')
@@ -127,7 +127,7 @@ class Former extends FormBuilder {
     /**
      * Retrieve a single option
      *
-     * @param  string $key
+     * @param  string  $key
      * @return string
      */
     private function getOption($key)
@@ -141,13 +141,13 @@ class Former extends FormBuilder {
      * Call with the field name and the comment, or an array
      * of comments
      *
-     * @param  mixed  $name
-     * @param  string $comment
+     * @param  mixed   $name
+     * @param  string  $comment
      * @return self
      */
     public function setComments($name, $comment = '')
     {
-        if (is_array($name) && count($name) > 0) {
+        if (is_array($name) and count($name) > 0) {
             $this->comments = array_merge($this->comments, $name);
         } else {
             $this->comments[$name] = $comment;
@@ -198,10 +198,10 @@ class Former extends FormBuilder {
     /**
      * Create a HTML text input element.
      *
-     * @param  string $name
-     * @param  string $label
-     * @param  null   $value
-     * @param  array  $attributes
+     * @param  string  $name
+     * @param  string  $label
+     * @param  null    $value
+     * @param  array   $attributes
      * @return string
      */
     public function text($name, $label = '', $value = null, $attributes = array())
@@ -216,10 +216,10 @@ class Former extends FormBuilder {
     /**
      * Create a HTML textarea input element.
      *
-     * @param  string $name
-     * @param  string $label
-     * @param  null $value
-     * @param  array $attributes
+     * @param  string  $name
+     * @param  string  $label
+     * @param  null    $value
+     * @param  array   $attributes
      * @return string
      */
     public function textarea($name, $label = '', $value = null, $attributes = array())
@@ -330,7 +330,8 @@ class Former extends FormBuilder {
 
     /**
      * Create a HTML file input element.
-     * TODO: add labels
+     * 
+     * @todo Add support for labels.
      * 
      * @param  string  $name
      * @param  string  $label
@@ -427,7 +428,7 @@ class Former extends FormBuilder {
             } else {
                 $attributes['class'] = 'control-label';
             }
-            if ($this->getOption('requiredLabel') && substr($label, -strlen($this->getOption('requiredLabel'))) == $this->getOption('requiredLabel')) {
+            if ($this->getOption('requiredLabel') and substr($label, -strlen($this->getOption('requiredLabel'))) == $this->getOption('requiredLabel')) {
                 $label = $this->getOption('requiredPrefix') . str_replace($this->getOption('requiredLabel'), '', $label) . $this->getOption('requiredSuffix');
                 $attributes['class'] .= ' ' . $this->getOption('requiredClass');
             }
@@ -440,11 +441,6 @@ class Former extends FormBuilder {
 
     /**
      * Automatically populate the form field value
-     *
-     * @todo Note that there is s small error with checkboxes that are selected by default
-     * and then unselected by the user. If validation fails, then the checkbox will be
-     * selected again, because unselected checkboxes are not posted and there is no way
-     * to get this value after the redirect.
      *
      * @param  string $name Html form field to populate
      * @param  string $default The default value for the field
@@ -497,13 +493,13 @@ class Former extends FormBuilder {
         }
 
         // set the id attribute
-        if ($this->getOption('nameAsId') && !isset($attributes['id'])) {
+        if ($this->getOption('nameAsId') and !isset($attributes['id'])) {
             $attributes['id'] = $this->getOption('idPrefix') . $name;
         }
 
         // if the disabled attribute is set to false, then we will actually unsert it
         // as some browsers will set the field to disabled
-        if (isset($attributes['disabled']) && !$attributes['disabled']) {
+        if (isset($attributes['disabled']) and !$attributes['disabled']) {
             unset($attributes['disabled']);
         }
 

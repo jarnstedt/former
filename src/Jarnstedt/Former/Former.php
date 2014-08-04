@@ -11,7 +11,7 @@ use Illuminate\Routing\UrlGenerator;
  * Laravel 4 form builder with Twitter Bootstrap styling.
  *
  * @author  Joonas Järnstedt
- * @version 0.63
+ * @version 0.64
  */
 class Former extends FormBuilder {
 
@@ -73,23 +73,6 @@ class Former extends FormBuilder {
     }
 
     /**
-     * Load all the default config options
-     *
-     * @return void
-     */
-    private function loadConfig()
-    {
-        // L4 does not currently have a method for loading an entire config file
-        // so we have to spin through them individually for now
-        $options = array('formClass', 'autocomplete', 'nameAsId', 'idPrefix', 'requiredLabel', 'requiredPrefix',
-            'requiredSuffix', 'requiredClass', 'controlGroupError', 'displayInlineErrors', 'commentClass'
-        );
-        foreach ($options as $option) {
-            $this->options[$option] = $this->config->get('former::' . $option);
-        }
-    }
-
-    /**
      * Set form defaults
      *
      * @param  array  $defaults
@@ -122,17 +105,6 @@ class Former extends FormBuilder {
         }
 
         return $this;
-    }
-
-    /**
-     * Retrieve a single option
-     *
-     * @param  string  $key
-     * @return string
-     */
-    private function getOption($key)
-    {
-        return (isset($this->options[$key])) ? $this->options[$key] : '';
     }
 
     /**
@@ -191,7 +163,6 @@ class Former extends FormBuilder {
     public function hidden($name, $value = null, $attributes = array())
     {
         $value = $this->calculateValue($name, $value);
-
         return parent::hidden($name, $value, $attributes);
     }
 
@@ -209,7 +180,6 @@ class Former extends FormBuilder {
         $value = $this->calculateValue($name, $value);
         $attributes = $this->setAttributes($name, $attributes);
         $field = parent::text($name, $value, $attributes);
-
         return $this->buildWrapper($field, $name, $label);
     }
 
@@ -230,7 +200,6 @@ class Former extends FormBuilder {
             $attributes['rows'] = 4;
         }
         $field = parent::textarea($name, $value, $attributes);
-
         return $this->buildWrapper($field, $name, $label);
     }
 
@@ -246,7 +215,6 @@ class Former extends FormBuilder {
     {
         $attributes = $this->setAttributes($name, $attributes);
         $field = parent::password($name, $attributes);
-
         return $this->buildWrapper($field, $name, $label);
     }
 
@@ -307,7 +275,6 @@ class Former extends FormBuilder {
         $checked = $this->calculateValue($name, $checked);
         $attributes = $this->setAttributes($name, $attributes);
         $field = parent::checkbox($name, $value, $checked, $attributes);
-
         return $this->buildWrapper($field, $name, $label, true);
     }
 
@@ -324,7 +291,6 @@ class Former extends FormBuilder {
     {
         $checked = $this->calculateValue($name, $checked, $value);
         $attributes = $this->setAttributes($name, $attributes);
-
         return parent::radio($name, $value, $checked, $attributes);
     }
 
@@ -357,6 +323,56 @@ class Former extends FormBuilder {
     public function label($name, $value = null, $attributes = array())
     {
         return $this->buildLabel($name, $value, $attributes);
+    }
+
+    /**
+     * Create a HTML submit input element.
+     *
+     * @param  string $value        Button text
+     * @param  array  $attributes
+     * @return mixed
+     */
+    public function submit($value = null, $attributes = array())
+    {
+        $attributes['type'] = 'submit';
+        if (!isset($attributes['class'])) {
+            $attributes['class'] = 'btn';
+        } elseif (strpos($attributes['class'], 'btn') === false) {
+            $attributes['class'] .= ' btn';
+        }
+
+        return $this->button($value, $attributes);
+    }
+
+    /**
+     * Create a HTML reset input element.
+     *
+     * @param  string  $value
+     * @param  array   $attributes
+     * @return string
+     */
+    public function reset($value, $attributes = array())
+    {
+        $attributes['type'] = 'reset';
+        $attributes['class'] .= ' btn';
+        return $this->button($value, $attributes);
+    }
+
+    /**
+     * Load all the default config options
+     *
+     * @return void
+     */
+    private function loadConfig()
+    {
+        // L4 does not currently have a method for loading an entire config file
+        // so we have to spin through them individually for now
+        $options = array('formClass', 'autocomplete', 'nameAsId', 'idPrefix', 'requiredLabel', 'requiredPrefix',
+            'requiredSuffix', 'requiredClass', 'controlGroupError', 'displayInlineErrors', 'commentClass'
+        );
+        foreach ($options as $option) {
+            $this->options[$option] = $this->config->get('former::' . $option);
+        }
     }
 
     /**
@@ -512,38 +528,14 @@ class Former extends FormBuilder {
     }
 
     /**
-     * Create a HTML submit input element.
+     * Retrieve a single option
      *
-     * @param  string $value        Button text
-     * @param  array  $attributes
-     * @return mixed
-     */
-    public function submit($value = null, $attributes = array())
-    {
-        $btn_class = 'btn';
-
-        $attributes['type'] = 'submit';
-        if (!isset($attributes['class'])) {
-            $attributes['class'] = $btn_class;
-        } elseif (strpos($attributes['class'], $btn_class) === false) {
-            $attributes['class'] .= ' ' . $btn_class;
-        }
-
-        return $this->button($value, $attributes);
-    }
-
-    /**
-     * Create a HTML reset input element.
-     *
-     * @param  string  $value
-     * @param  array   $attributes
+     * @param  string  $key
      * @return string
      */
-    public function reset($value, $attributes = array())
+    private function getOption($key)
     {
-        $attributes['type'] = 'reset';
-        $attributes['class'] .= ' btn';
-        return $this->button($value, $attributes);
+        return (isset($this->options[$key])) ? $this->options[$key] : '';
     }
 
     /**

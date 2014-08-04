@@ -177,4 +177,32 @@ class FormerTest extends \PHPUnit_Framework_TestCase {
         $this->assertContains('value="3" selected', $select);
     }
 
+    /**
+     * Test field inputs with array name
+     * Example <input name="foo[]">
+     */
+    public function testArrayFieldName()
+    {
+        $this->session->shouldReceive('getOldInput')
+            ->andReturn(null);
+
+        $obj = m::mock('Obj');
+        $obj->test = 'foobar';
+
+        $obj->shouldReceive('test_selectOptions')
+            ->once()
+            ->andReturn(array(1 => 'a', 2 => 'b', 3 => 'c'));
+
+        // Text field
+        $form = $this->former->make($obj);
+        $text = $form->text('test[]');
+        $this->assertContains('name="test[]"', $text);
+
+        $select = $form->select('test_select[]');
+        $this->assertContains('name="test_select[]"', $select);
+        $this->assertContains('<option value="1">a</option>', $select);
+        $this->assertContains('<option value="2">b</option>', $select);
+        $this->assertContains('<option value="3">c</option>', $select);
+    }
+
 }

@@ -289,7 +289,7 @@ class Former extends FormBuilder {
         if (is_null($this->model)) {
             return null;
         }
-        return $this->model->{$name.'Options'}();
+        return $this->model->{$this->fieldName($name).'Options'}();
     }
 
     /**
@@ -442,19 +442,17 @@ class Former extends FormBuilder {
     /**
      * Automatically populate the form field value
      *
-     * @param  string $name Html form field to populate
-     * @param  string $default The default value for the field
-     * @param  string $radioValue Set to true for radio buttons
+     * @param  string  $name        Html form field to populate
+     * @param  string  $default     The default value for the field
+     * @param  string  $radioValue  Set to true for radio buttons
      * @return string
      */
     private function calculateValue($name, $default = '', $radioValue = '')
     {
         $result = '';
         $oldInput = $this->session->getOldInput($name);
+        $fieldName = $this->fieldName($name);
         // First check if there is post data
-        // This assumes that you are redirecting after failed post
-        // and that you have flashed the data
-        // @see http://laravel.com/docs/input#old-input
         if ($oldInput !== null) {
             $result = ($radioValue)
                 ? $oldInput == $radioValue
@@ -463,14 +461,14 @@ class Former extends FormBuilder {
         // check if there is a default value set specifically for this field
         } elseif (!empty($default)) {
             $result = $default;
-        } elseif (!is_null($this->model)) {
-            $result = $this->model->{$name};
+        } elseif (!is_null($this->model) and isset($this->model->$fieldName)) {
+            $result = $this->model->$fieldName;
 
         // lastly, check if any defaults have been set for the form as a whole
-        } elseif (isset($this->defaults->$name)) {
+        } elseif (isset($this->defaults->$fieldName)) {
             $result = ($radioValue)
-                ? $this->defaults->$name == $radioValue
-                : $this->defaults->$name;
+                ? $this->defaults->$fieldName == $radioValue
+                : $this->defaults->$fieldName;
         }
 
         return $result;
@@ -560,6 +558,19 @@ class Former extends FormBuilder {
             return $this->errors->first($key);
         }
         return null;
+    }
+
+    /**
+     * Get cleaned field name
+     * Needed for fields like <input name="foo[]">
+     * 
+     * @param   string  $name  Field name
+     * @return  string         Cleaned field name
+     */
+    private function fieldName($name)
+    {
+        $name = str_replace(']', '', $name);
+        return str_replace('[', '', $name);
     }
 
 }

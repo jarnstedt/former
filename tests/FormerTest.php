@@ -110,6 +110,18 @@ class FormerTest extends \PHPUnit_Framework_TestCase {
     }
 
     /**
+     * Test select with no options
+     */
+    public function testEmptySelect()
+    {
+        $this->session->shouldReceive('getOldInput')
+            ->andReturn(null);
+        $form = $this->former->make();
+        $select = $form->select('test', null, array());
+        $this->assertNotContains('option', $select);
+    }
+
+    /**
      * Test file input field
      */
     public function testFile()

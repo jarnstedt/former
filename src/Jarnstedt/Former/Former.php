@@ -228,10 +228,10 @@ class Former extends FormBuilder {
      * @param  array   $attributes
      * @return string
      */
-    public function select($name, $label = '', $options = array(), $selected = null, $attributes = array())
+    public function select($name, $label = '', $options = null, $selected = null, $attributes = array())
     {
         $modelOptions = null;
-        if (empty($options)) {
+        if (is_null($options)) {
             $modelOptions = $this->getModelOptions($name);
         }
 

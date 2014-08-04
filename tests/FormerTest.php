@@ -193,16 +193,26 @@ class FormerTest extends \PHPUnit_Framework_TestCase {
             ->once()
             ->andReturn(array(1 => 'a', 2 => 'b', 3 => 'c'));
 
-        // Text field
         $form = $this->former->make($obj);
+        
+        // Text field
         $text = $form->text('test[]');
         $this->assertContains('name="test[]"', $text);
 
+        // Text field 2
+        $text2 = $form->text('value[1]', 'Label', 'foo');
+        $this->assertContains('name="value[1]"', $text2);
+
+        // Select field
         $select = $form->select('test_select[]');
         $this->assertContains('name="test_select[]"', $select);
         $this->assertContains('<option value="1">a</option>', $select);
         $this->assertContains('<option value="2">b</option>', $select);
         $this->assertContains('<option value="3">c</option>', $select);
+
+        // Select field 2
+        $select2 = $form->select('test_select[1]', 'Label.req', array('a', 'b', 'c'));
+        $this->assertContains('name="test_select[1]"', $select2);
     }
 
 }

@@ -11,7 +11,7 @@ use Illuminate\Routing\UrlGenerator;
  * Laravel 4 form builder with Twitter Bootstrap styling.
  *
  * @author  Joonas Järnstedt
- * @version 0.64
+ * @version 0.65
  */
 class Former extends FormBuilder {
 
@@ -143,12 +143,6 @@ class Former extends FormBuilder {
         } elseif (strpos($attributes['class'], 'form-') === false) {
             $attributes['class'] .= ' ' . $this->getOption('formClass');
         }
-
-        // Auto-complete attribute
-        if (empty($attributes['autocomplete'])) {
-            $attributes['autocomplete'] = $this->getOption('autocomplete');
-        }
-        unset($attributes['autocomplete']);
         return parent::open($attributes);
     }
 
@@ -273,7 +267,7 @@ class Former extends FormBuilder {
     public function checkbox($name, $label = '', $value = '1', $checked = false, $attributes = array())
     {
         $checked = $this->calculateValue($name, $checked);
-        $attributes = $this->setAttributes($name, $attributes);
+        $attributes = $this->setAttributes($name, $attributes, false);
         $field = parent::checkbox($name, $value, $checked, $attributes);
         return $this->buildWrapper($field, $name, $label, true);
     }
@@ -290,7 +284,7 @@ class Former extends FormBuilder {
     public function radio($name, $value = '1', $checked = false, $attributes = array())
     {
         $checked = $this->calculateValue($name, $checked, $value);
-        $attributes = $this->setAttributes($name, $attributes);
+        $attributes = $this->setAttributes($name, $attributes, false);
         return parent::radio($name, $value, $checked, $attributes);
     }
 
@@ -496,9 +490,10 @@ class Former extends FormBuilder {
      *
      * @param  string $name
      * @param  array  $attributes
+     * @param  bool   $bootstrap  Use bootstrap styles
      * @return array
      */
-    private function setAttributes($name, $attributes = array())
+    private function setAttributes($name, $attributes = array(), $bootstrap = true)
     {
         // set the comment
         if (!empty($attributes['comment'])) {
@@ -518,10 +513,12 @@ class Former extends FormBuilder {
         }
 
         // add "form-control" class to all inputs
-        if (empty($attributes['class'])) {
-            $attributes['class'] = 'form-control';
-        } else {
-            $attributes['class'] .= ' form-control';
+        if ($bootstrap) {
+            if (empty($attributes['class'])) {
+                $attributes['class'] = 'form-control';
+            } else {
+                $attributes['class'] .= ' form-control';
+            }
         }
 
         return $attributes;

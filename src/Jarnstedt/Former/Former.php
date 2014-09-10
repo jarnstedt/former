@@ -5,12 +5,13 @@ use Illuminate\Session\Store as Session;
 use Illuminate\Html\FormBuilder;
 use Illuminate\Html\HtmlBuilder;
 use Illuminate\Routing\UrlGenerator;
+use Illuminate\Support\ViewErrorBag;
 
 /**
  * Laravel 4 form builder with Twitter Bootstrap styling.
  *
  * @author  Joonas Järnstedt
- * @version 0.65
+ * @version 0.66
  */
 class Former extends FormBuilder {
 
@@ -74,8 +75,8 @@ class Former extends FormBuilder {
     /**
      * Set form defaults
      *
-     * @param  array  $defaults
-     * @return class
+     * @param  array $defaults
+     * @return $this
      */
     public function setDefaults($defaults = array())
     {
@@ -242,7 +243,7 @@ class Former extends FormBuilder {
     /**
      * Get select options from form model if set
      * 
-     * @param  $name Select name
+     * @param  string $name Select name
      * @return mixed
      */
     private function getModelOptions($name)
@@ -378,6 +379,11 @@ class Former extends FormBuilder {
      */
     private function buildWrapper($field, $name, $label = '', $checkbox = false)
     {
+        // Don't wrap if bootstrap disabled
+        if ($this->getOption('bootstrap') == false) {
+            return $field;
+        }
+
         $error = $this->getError($name);
         
         $comment = '';
@@ -541,7 +547,7 @@ class Former extends FormBuilder {
      */
     private function getError($key)
     {
-        if ($this->errors and $this->errors instanceof \Illuminate\Support\ViewErrorBag) {
+        if ($this->errors and $this->errors instanceof ViewErrorBag) {
             return $this->errors->first($key);
         }
         return null;

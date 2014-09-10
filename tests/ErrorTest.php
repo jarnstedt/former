@@ -60,6 +60,7 @@ class ErrorTest extends \PHPUnit_Framework_TestCase {
         );
 
         $form = $this->former->make();
+        $form->setOption('bootstrap', true);
         $text = $form->text('test');
 
         // Should have error class 'has-error'

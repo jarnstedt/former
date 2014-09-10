@@ -35,6 +35,7 @@ class FormerTest extends \PHPUnit_Framework_TestCase {
             $this->session,
             $this->config
         );
+        $this->former->setOption('bootstrap', true);
     }
 
     public function tearDown()

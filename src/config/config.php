@@ -5,6 +5,9 @@ return array(
     // Default form class
     'formClass' => 'form-horizontal',
 
+    // Default form group class
+    'formGroupClass' => 'form-group',
+
     // Use inputs name as id
     'nameAsId' => true,
 

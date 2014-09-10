@@ -49,7 +49,7 @@ class ErrorTest extends \PHPUnit_Framework_TestCase {
 
         $this->config->shouldReceive('get')
             ->withAnyArgs()
-            ->times(10)
+            ->times(11)
             ->andReturn('');
 
         $this->former = new Former(

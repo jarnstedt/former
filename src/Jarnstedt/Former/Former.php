@@ -360,7 +360,7 @@ class Former extends FormBuilder {
         // L4 does not currently have a method for loading an entire config file
         // so we have to spin through them individually for now
         $options = array('formClass', 'autocomplete', 'nameAsId', 'idPrefix', 'requiredLabel', 'requiredPrefix',
-            'requiredSuffix', 'requiredClass', 'controlGroupError', 'displayInlineErrors', 'commentClass'
+            'requiredSuffix', 'requiredClass', 'controlGroupError', 'displayInlineErrors', 'commentClass', 'bootstrap'
         );
         foreach ($options as $option) {
             $this->options[$option] = $this->config->get('former::' . $option);

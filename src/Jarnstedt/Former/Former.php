@@ -393,7 +393,7 @@ class Former extends FormBuilder {
             $comment .= '</div>';
         }
 
-        $class = $this->getOption('');
+        $class = $this->getOption('formGroupClass');
         if ($this->getOption('controlGroupError') and !empty($error)) {
             $class .= ' ' . $this->getOption('controlGroupError');
         }

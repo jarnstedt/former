@@ -10,7 +10,7 @@ use Illuminate\Routing\UrlGenerator;
  * Laravel 4 form builder with Twitter Bootstrap styling.
  *
  * @author  Joonas Järnstedt
- * @version 0.64
+ * @version 0.65
  */
 class Former extends FormBuilder {
 
@@ -402,7 +402,7 @@ class Former extends FormBuilder {
         $out  = '<div class="'.$class.'"'.$id.'>';
         $out .= $this->buildLabel($name, $label);
 
-        $out .= ($checkbox === true and !empty($field)) ? '<label class="checkbox">' : '';
+        $out .= ($checkbox === true and !empty($field) and !is_null($label)) ? '<label class="checkbox">' : '';
         $out .= $field;
 
         if ($this->getOption('displayInlineErrors') and !empty($error)) {
@@ -413,7 +413,7 @@ class Former extends FormBuilder {
             if (!empty($this->comments[$name])) {
                 $out .= $comment;
             }
-            if (!empty($field)) {
+            if (!empty($field) and !is_null($label)) {
                 $out .= '</label>';
             }
         } else {

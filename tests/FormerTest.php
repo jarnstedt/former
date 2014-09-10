@@ -89,6 +89,37 @@ class FormerTest extends \PHPUnit_Framework_TestCase {
     }
 
     /**
+     * Test checkbox input field
+     */
+    public function testCheckbox()
+    {
+        // mock old input
+        $this->session->shouldReceive('getOldInput')->andReturn(null);
+
+        $form = $this->former->make();
+        $html = $form->checkbox('foobar', 'Label');
+        $this->assertContains('name="foobar"', $html);
+        $this->assertContains('Label', $html);
+    }
+
+    /**
+     * Test checkbox without label
+     */
+    public function testCheckboxNullLabel()
+    {
+        // mock old input
+        $this->session->shouldReceive('getOldInput')->andReturn(null);
+
+        $form = $this->former->make();
+        $html = $form->checkbox('foobar', null, 1, true, array('class' => 'bar'));
+        $this->assertContains('name="foobar"', $html);
+        $this->assertNotContains('label', $html);
+        $this->assertContains('value="1"', $html);
+        $this->assertContains('checked="checked"', $html);
+        $this->assertContains('class="bar', $html);
+    }
+
+    /**
      * Test select input field
      */
     public function testSelect()

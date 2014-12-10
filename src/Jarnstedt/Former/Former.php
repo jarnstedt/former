@@ -473,7 +473,7 @@ class Former extends FormBuilder {
                 : $this->session->getOldInput($name, $default);
 
         // check if there is a default value set specifically for this field
-        } elseif (!empty($default)) {
+        } elseif ($default !== '' || is_null($default)) {
             $result = $default;
         } elseif (!is_null($this->model) and isset($this->model->$fieldName)) {
             $result = $this->model->$fieldName;

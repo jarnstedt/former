@@ -121,6 +121,23 @@ class FormerTest extends \PHPUnit_Framework_TestCase {
     }
 
     /**
+     * Test zeros as input value
+     */
+    public function testZeroValue()
+    {
+        $this->session->shouldReceive('getOldInput')->andReturn(null);
+        $form = $this->former->make();
+        $html = $form->text('name', 'label', 0);
+        $this->assertContains('value="0"', $html);
+        $html = $form->textarea('name', 'label', 0);
+        $this->assertContains('0</textarea>', $html);
+        $html = $form->checkbox('name', 'label', 0, true);
+        $this->assertContains('value="0"', $html);
+        $html = $form->hidden('name', 0);
+        $this->assertContains('value="0"', $html);
+    }
+
+    /**
      * Test select input field
      */
     public function testSelect()
